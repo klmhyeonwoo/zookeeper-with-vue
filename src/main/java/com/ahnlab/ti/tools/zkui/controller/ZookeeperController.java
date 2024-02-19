@@ -3,6 +3,7 @@ package com.ahnlab.ti.tools.zkui.controller;
 import com.ahnlab.ti.tools.zkui.service.ZookeeperService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class ZookeeperController {
             result.put("metadata", zookeeperService.getMetaData(path));
         return result;
     }
-    @PostMapping("/api/zkui/clusters/{clusterName}/node")
+    @PostMapping(value = "/api/zkui/clusters/{clusterName}/node", consumes = MediaType.TEXT_PLAIN_VALUE)
     public Map<String, String> handlerSetNode(
             @RequestParam(required = true) String path,
             @RequestParam(required = false) boolean overwrite,

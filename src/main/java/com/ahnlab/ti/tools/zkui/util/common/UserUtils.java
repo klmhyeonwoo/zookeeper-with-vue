@@ -1,7 +1,5 @@
 package com.ahnlab.ti.tools.zkui.util.common;
 
-import com.ahnlab.ti.tools.zkui.exception.user.InvalidPathException;
-
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,7 +1,6 @@
 package com.ahnlab.ti.tools.zkui.util.zookeeper;
 
 import com.ahnlab.ti.tools.zkui.exception.user.DuplicatePathException;
-import com.ahnlab.ti.tools.zkui.exception.user.InvalidPathException;
 import com.ahnlab.ti.tools.zkui.exception.user.ZnodeNotFoundException;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
@@ -33,9 +32,9 @@ class ZookeeperAccessorTest {
 
     @ParameterizedTest
     @MethodSource("provideStringsForTest")
-    public void checkPath_ThrowsInvalidPathException(String input){
+    public void checkPath_ThrowsIllegalArgumentException(String input){
         assertThatThrownBy(() -> zookeeperAccessor.checkPath(input))
-                .isInstanceOf(InvalidPathException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
