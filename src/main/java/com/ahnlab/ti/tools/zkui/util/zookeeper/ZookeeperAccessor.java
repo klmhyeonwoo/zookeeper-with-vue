@@ -57,13 +57,17 @@ public class ZookeeperAccessor {
     }
 
     public <T> T doWithZookeeper(String path, ZookeeperAction<T> action){
+        ZooKeeper con = null;
         try{
             checkPath(path);
-            ZooKeeper con = getConnection();
+            con = getConnection();
             return action.getConnection(con);
         } catch (InterruptedException | KeeperException | IOException e){
             log.error(e.getMessage());
             throw new GlobalException(e.getMessage());
+        } finally {
+            assert  con != null;
+            closeConnection(con);
         }
     }
 

@@ -26,68 +26,48 @@ public class ZookeeperTemplate extends ZookeeperAccessor implements ZookeeperOpe
     @Override
     public Map<String, Object> getChildren(String path) {
         return doWithZookeeper(path, con -> {
-            try{
-                checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
-                return recursion(con, path);
-            }finally {
-                assert con != null;
-                closeConnection(con);
-            }
+            checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
+            return recursion(con, path);
         });
     }
 
     @Override
     public String getData(String path) {
         return doWithZookeeper(path, con -> {
-            try{
-                checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
-                return UserUtils.decodedData(con.getData(path, false, null));
-            }finally {
-                assert con != null;
-                closeConnection(con);
-            }
+            checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
+            return UserUtils.decodedData(con.getData(path, false, null));
         });
     }
 
     @Override
     public Map<String ,String> setData(String path, String value, boolean overwrite) {
         return doWithZookeeper(path, con -> {
-            try{
-                checkZNode(path, overwrite, con); //(1) overwrite = false 이며 path 가 존재함 -> 에러 발생(409)
+            checkZNode(path, overwrite, con); //(1) overwrite = false 이며 path 가 존재함 -> 에러 발생(409)
 
-                //(2) overwrite = true 이지만, path 가 존재함 -> set 호출
-                if (overwrite && con.exists(path, false) != null) {
-                    con.setData(path, value.getBytes(), -1);
-                } else {
-                    //그 외의 경우 -> 부모 추가 후, 자식도 추가
-                    //(3) overwrite = true 이지만, path 가 존재하지 않음
-                    //(4) overwrite = false 이지만, path 가 존재하지 않음
-                    addParentZNode(con, path);
-                    con.create(path, value.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-                }
-                return new HashMap<String, String>(){{
-                    put("path", path);
-                    put("value", value);
-                }};
-            }finally {
-                assert  con != null;
-                closeConnection(con);
+            //(2) overwrite = true 이지만, path 가 존재함 -> set 호출
+            if (overwrite && con.exists(path, false) != null) {
+                con.setData(path, value.getBytes(), -1);
+            } else {
+                //그 외의 경우 -> 부모 추가 후, 자식도 추가
+                //(3) overwrite = true 이지만, path 가 존재하지 않음
+                //(4) overwrite = false 이지만, path 가 존재하지 않음
+                addParentZNode(con, path);
+                con.create(path, value.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
+            return new HashMap<String, String>(){{
+                put("path", path);
+                put("value", value);
+            }};
         });
     }
 
     @Override
     public Map<String, String> getMetadata(String path) {
         return doWithZookeeper(path, con -> {
-            try{
-                Map<String, String> result = new HashMap<>();
-                Stat stat = checkZNodeStat(path, con); //znode 없을 시, 에러 발생
-                setStatDetails(result, stat);
-                return result;
-            }finally {
-                assert con != null;
-                closeConnection(con);
-            }
+            Map<String, String> result = new HashMap<>();
+            Stat stat = checkZNodeStat(path, con); //znode 없을 시, 에러 발생
+            setStatDetails(result, stat);
+            return result;
         });
     }
 
