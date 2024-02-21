@@ -12,5 +12,5 @@ public interface ZookeeperOperation {
     Map<String, Object> getChildren(String path);
     Map<String, String> getMetadata(String path);
     String getData(String path) throws InterruptedException, KeeperException, UnsupportedEncodingException;
-    void setData(String path, String value, boolean overwrite);
+    Map<String, String> setData(String path, String value, boolean overwrite);
 }
