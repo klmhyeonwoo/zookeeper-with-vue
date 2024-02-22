@@ -6,5 +6,5 @@ public interface ZookeeperService {
     Map<String, Object> getChildren(String path);
     Map<String, String> getMetaData(String path);
     String getData(String path);
-    Map<String, String> setData(String path, String value, boolean overwrite);
+    void setData(String path, String value, boolean overwrite);
 }

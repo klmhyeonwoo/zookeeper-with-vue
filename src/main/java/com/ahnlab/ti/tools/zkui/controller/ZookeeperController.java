@@ -41,7 +41,11 @@ public class ZookeeperController {
             @RequestParam(required = false) boolean overwrite,
             @RequestBody(required = true) String value
     ){
-        return zookeeperService.setData(path, value, overwrite);
+        zookeeperService.setData(path, value, overwrite);
+        return new HashMap<String, String>(){{
+            put("path", path);
+            put("value", value);
+        }};
     }
 
 }
