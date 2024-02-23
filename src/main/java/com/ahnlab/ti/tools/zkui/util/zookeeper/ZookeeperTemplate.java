@@ -1,6 +1,5 @@
 package com.ahnlab.ti.tools.zkui.util.zookeeper;
 
-import com.ahnlab.ti.tools.zkui.exception.user.GlobalException;
 import com.ahnlab.ti.tools.zkui.util.common.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.CreateMode;
@@ -10,7 +9,6 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -24,93 +22,50 @@ import java.util.Map;
 public class ZookeeperTemplate extends ZookeeperAccessor implements ZookeeperOperation{
     public static final String SLASH_STRING = "/";
     public static final String EMPTY_STRING = "";
+
     @Override
     public Map<String, Object> getChildren(String path) {
-        checkPath(path); //입력 검증
-
-        ZooKeeper con = null;
-        try{
-            con = getConnection();
-            checkZNodeStat(path, con); //Znode 존재 유무 확인
-
+        return doWithZookeeper(path, con -> {
+            checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
             return recursion(con, path);
-        } catch (InterruptedException | KeeperException | IOException e) { //그 외 에러 발생
-            log.error(e.getMessage());
-            throw new GlobalException(e.getMessage());
-        } finally {
-            assert con != null;
-            closeConnection(con);
-        }
+        });
     }
+
     @Override
     public String getData(String path) {
-        checkPath(path); //입력 검증 실패 시, 에러 발생
-
-        ZooKeeper con = null;
-        try{
-            con = getConnection();
-
+        return doWithZookeeper(path, con -> {
             checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
-
             return UserUtils.decodedData(con.getData(path, false, null));
-        }catch (KeeperException | InterruptedException | IOException e){ //그 외 에러 발생
-            log.error(e.getMessage());
-            throw new GlobalException(e.getMessage());
-        }finally {
-            assert con != null;
-            closeConnection(con);
-        }
+        });
     }
+
     @Override
     public void setData(String path, String value, boolean overwrite) {
-        checkPath(path); //입력 검증 실패 시, 에러 발생(400)
-
-        ZooKeeper con = null;
-
-        try{
-            con = getConnection();
+        doWithZookeeper(path, con -> {
             checkZNode(path, overwrite, con); //(1) overwrite = false 이며 path 가 존재함 -> 에러 발생(409)
 
             //(2) overwrite = true 이지만, path 가 존재함 -> set 호출
-            if(overwrite && con.exists(path, false) != null) {
+            if (overwrite && con.exists(path, false) != null) {
                 con.setData(path, value.getBytes(), -1);
-            } else{
+            } else {
                 //그 외의 경우 -> 부모 추가 후, 자식도 추가
                 //(3) overwrite = true 이지만, path 가 존재하지 않음
                 //(4) overwrite = false 이지만, path 가 존재하지 않음
                 addParentZNode(con, path);
                 con.create(path, value.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             }
-
-        } catch (InterruptedException | KeeperException | IOException e) {
-            log.error(e.getMessage());
-            throw new GlobalException(e.getMessage());
-        } finally {
-            assert con != null;
-            closeConnection(con);
-        }
-
+            return null;
+        });
     }
+
     @Override
     public Map<String, String> getMetadata(String path) {
-        checkPath(path); //입력 검증
-
-        ZooKeeper con = null;
-        Map<String, String> result = new HashMap<>();
-        Stat stat = null;
-        try{
-            con = getConnection();
-            stat = checkZNodeStat(path, con); //ZNode 없을 시, 에러 발생
-
+        return doWithZookeeper(path, con -> {
+            Map<String, String> result = new HashMap<>();
+            Stat stat = checkZNodeStat(path, con); //znode 없을 시, 에러 발생
             setStatDetails(result, stat);
-        } catch (InterruptedException | KeeperException | IOException e) {
-            log.error(e.getMessage());
-            throw new GlobalException(e.getMessage());
-        } finally {
-            assert con != null;
-            closeConnection(con);
-        }
-        return result;
+            return result;
+        });
     }
 
     /**

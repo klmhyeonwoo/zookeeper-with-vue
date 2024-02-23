@@ -25,8 +25,6 @@ public class ZookeeperServiceimpl implements ZookeeperService {
         return zookeeperTemplate.getData(path);
     }
     @Override
-    public void setData(String path, String value, boolean overwrite) {
-        zookeeperTemplate.setData(path, value, overwrite);
-    }
+    public void setData(String path, String value, boolean overwrite) { zookeeperTemplate.setData(path, value, overwrite); }
 
 }
