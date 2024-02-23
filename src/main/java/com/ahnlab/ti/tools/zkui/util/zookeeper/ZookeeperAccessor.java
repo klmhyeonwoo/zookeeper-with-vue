@@ -1,6 +1,5 @@
 package com.ahnlab.ti.tools.zkui.util.zookeeper;
 
-import com.ahnlab.ti.tools.zkui.config.ZookeeperConfig;
 import com.ahnlab.ti.tools.zkui.exception.user.DuplicatePathException;
 import com.ahnlab.ti.tools.zkui.exception.user.GlobalException;
 import com.ahnlab.ti.tools.zkui.exception.user.ZnodeNotFoundException;
@@ -10,7 +9,6 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.common.PathUtils;
 import org.apache.zookeeper.data.Stat;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -21,11 +19,8 @@ import java.io.IOException;
 @Slf4j
 public class ZookeeperAccessor {
 
-    @Autowired
-    private ZookeeperConfig zookeeperConfig;
-
-    public ZooKeeper getConnection() throws IOException {
-        return new ZooKeeper(zookeeperConfig.getHost(), 5000, null);
+    public ZooKeeper getConnection(String host) throws IOException {
+        return new ZooKeeper(host, 5000, null);
     }
 
     public void closeConnection(ZooKeeper zooKeeper) {
@@ -56,11 +51,11 @@ public class ZookeeperAccessor {
             throw new DuplicatePathException("Znode already exists");
     }
 
-    public <T> T doWithZookeeper(String path, ZookeeperAction<T> action){
+    public <T> T doWithZookeeper(String path, String host, ZookeeperAction<T> action){
         ZooKeeper con = null;
         try{
             checkPath(path);
-            con = getConnection();
+            con = getConnection(host);
             return action.getConnection(con);
         } catch (InterruptedException | KeeperException | IOException e){
             log.error(e.getMessage());
