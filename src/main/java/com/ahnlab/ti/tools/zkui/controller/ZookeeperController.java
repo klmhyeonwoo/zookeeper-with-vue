@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class ZookeeperController {
 
     @PostMapping(value = "/api/zkui/clusters", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> handlerAddCluster(
-            @RequestBody ClusterDTO clusterDTO
+            @Valid @RequestBody ClusterDTO clusterDTO
             ) {
         ZookeeperConfig.addCluster(clusterDTO.getName(), clusterDTO.getHost());
         return new HashMap<String, String>(){{
