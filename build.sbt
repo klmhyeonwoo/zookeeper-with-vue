@@ -19,6 +19,7 @@ lazy val root = (project in file("."))
       "org.springframework.boot" % "spring-boot-starter-web" % "2.4.13",
       "org.springframework.boot" % "spring-boot-starter-test" % "2.6.15" % Test,
       "org.junit.platform" % "junit-platform-launcher" % "1.10.1" % Test,
+      "org.springframework.boot" % "spring-boot-starter-validation" % "2.7.18",
       "org.projectlombok" % "lombok" % "1.18.30" % "provided",
       "org.apache.zookeeper" % "zookeeper" % "3.9.1"
     ),

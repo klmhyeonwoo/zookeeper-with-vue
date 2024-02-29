@@ -9,8 +9,8 @@ import java.util.Map;
  ZookeeperTemplate 기능 명세
  */
 public interface ZookeeperOperation {
-    Map<String, Object> getChildren(String path);
-    Map<String, String> getMetadata(String path);
-    String getData(String path) throws InterruptedException, KeeperException, UnsupportedEncodingException;
-    void setData(String path, String value, boolean overwrite);
+    Map<String, Object> getChildren(String path, String host);
+    Map<String, String> getMetadata(String path, String host);
+    String getData(String path, String host);
+    void setData(String path, String value, String host, boolean overwrite);
 }

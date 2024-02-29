@@ -25,14 +25,14 @@ import static org.mockito.Mockito.*;
 public class ZookeeperTemplateTest {
 
     private ZooKeeper mockZookeeper;
-
     private ZookeeperTemplate mockZookeeperTemplate;
+    private static final String host = "testhost";
 
     @BeforeEach
     public void beforeEach() throws IOException, InterruptedException, KeeperException {
         mockZookeeper = mock(ZooKeeper.class);
         mockZookeeperTemplate = spy(new ZookeeperTemplate());
-        doReturn(mockZookeeper).when(mockZookeeperTemplate).getConnection();
+        doReturn(mockZookeeper).when(mockZookeeperTemplate).getConnection(host);
         doReturn(new Stat()).when(mockZookeeperTemplate).checkZNodeStat(anyString(), any());
     }
 
@@ -61,7 +61,7 @@ public class ZookeeperTemplateTest {
         expectedResult.put("child1", child1Map);
         expectedResult.put("child2", child2Map);
         //When
-        Map<String, Object> result = mockZookeeperTemplate.getChildren("/");
+        Map<String, Object> result = mockZookeeperTemplate.getChildren("/", host);
         //Then
         Assertions.assertEquals(result, expectedResult);
     }
@@ -69,11 +69,11 @@ public class ZookeeperTemplateTest {
     @Test
     public void getDataTest() throws InterruptedException, KeeperException {
         //Given
-        String path = "/child";
+        String path = "/path";
         String expectedResult = "data";
         when(mockZookeeper.getData(path, false, null)).thenReturn(expectedResult.getBytes());
         //When
-        String result = mockZookeeperTemplate.getData(path);
+        String result = mockZookeeperTemplate.getData(path, host);
         //Then
         Assertions.assertEquals(expectedResult, result);
     }
@@ -88,7 +88,7 @@ public class ZookeeperTemplateTest {
 
         doReturn(mockStat).when(mockZookeeper).exists(anyString(), anyBoolean());
         //When, Then
-        assertDoesNotThrow(() -> mockZookeeperTemplate.setData(path, value, true));
+        assertDoesNotThrow(() -> mockZookeeperTemplate.setData(path, value, host, true));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ZookeeperTemplateTest {
 
         doReturn(mockStat).when(mockZookeeperTemplate).checkZNodeStat(anyString(), any());
         //When
-        Map<String, String> result = mockZookeeperTemplate.getMetadata("/");
+        Map<String, String> result = mockZookeeperTemplate.getMetadata("/", host);
         //Then
         Assertions.assertEquals(expectedResult.get(key), result.get(key));
     }

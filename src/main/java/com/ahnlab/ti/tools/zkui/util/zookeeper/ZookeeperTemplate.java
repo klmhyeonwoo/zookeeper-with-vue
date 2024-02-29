@@ -24,24 +24,24 @@ public class ZookeeperTemplate extends ZookeeperAccessor implements ZookeeperOpe
     public static final String EMPTY_STRING = "";
 
     @Override
-    public Map<String, Object> getChildren(String path) {
-        return doWithZookeeper(path, con -> {
+    public Map<String, Object> getChildren(String path, String host) {
+        return doWithZookeeper(path, host, con -> {
             checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
             return recursion(con, path);
         });
     }
 
     @Override
-    public String getData(String path) {
-        return doWithZookeeper(path, con -> {
+    public String getData(String path, String host) {
+        return doWithZookeeper(path, host, con -> {
             checkZNodeStat(path, con); //Znode 없을 시, 에러 발생
             return UserUtils.decodedData(con.getData(path, false, null));
         });
     }
 
     @Override
-    public void setData(String path, String value, boolean overwrite) {
-        doWithZookeeper(path, con -> {
+    public void setData(String path, String value, String host, boolean overwrite) {
+        doWithZookeeper(path, host, con -> {
             checkZNode(path, overwrite, con); //(1) overwrite = false 이며 path 가 존재함 -> 에러 발생(409)
 
             //(2) overwrite = true 이지만, path 가 존재함 -> set 호출
@@ -59,8 +59,8 @@ public class ZookeeperTemplate extends ZookeeperAccessor implements ZookeeperOpe
     }
 
     @Override
-    public Map<String, String> getMetadata(String path) {
-        return doWithZookeeper(path, con -> {
+    public Map<String, String> getMetadata(String path, String host) {
+        return doWithZookeeper(path, host, con -> {
             Map<String, String> result = new HashMap<>();
             Stat stat = checkZNodeStat(path, con); //znode 없을 시, 에러 발생
             setStatDetails(result, stat);

@@ -1,9 +1,7 @@
 package com.ahnlab.ti.tools.zkui.exception.handler;
 
 import com.ahnlab.ti.tools.zkui.exception.ErrorResult;
-import com.ahnlab.ti.tools.zkui.exception.user.DuplicatePathException;
-import com.ahnlab.ti.tools.zkui.exception.user.GlobalException;
-import com.ahnlab.ti.tools.zkui.exception.user.ZnodeNotFoundException;
+import com.ahnlab.ti.tools.zkui.exception.user.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,6 +38,20 @@ public class UserControllerAdvice {
     public ErrorResult GlobalException(GlobalException e){
         log.error("[GlobalException] ex", e);
         return new ErrorResult(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DuplicateNameException.class)
+    public ErrorResult DuplicateNameException(DuplicateNameException e){
+        log.error("[DuplicateNameException] ex", e);
+        return new ErrorResult(HttpStatus.CONFLICT.value(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ExceptionHandler(HostNotFoundException.class)
+    public ErrorResult HostNotFoundException(HostNotFoundException e){
+        log.error("[HostNotFoundException] ex", e);
+        return new ErrorResult(HttpStatus.NO_CONTENT.value(), e.getMessage());
     }
 
 }
