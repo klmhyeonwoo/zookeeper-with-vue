@@ -1,0 +1,163 @@
+###########################################################
+############# DEFAULT SETTING ###############
+# 변경 x
+image:
+  project: ti
+  pullPolicy: IfNotPresent
+  registry: helm-repos
+#############################################
+
+
+###########################################################
+############# 서비스 별 변경이 필요한 values ##############
+################### COMMON CHART VALUES ###################
+global:
+  ### namespace 변경x ###
+  deploy_env:
+  namespace: ti-svc
+  ### namespace 변경x ###
+  servicePort: 20012
+  serviceNodePort : 20012
+  adminPort: 20105
+  adminNodePort: 20105
+  ## 서비스의 original name
+  serviceName: ti-tools_zookeeper-ui
+
+
+################ env 별 replica cnt 정의 ###################
+replicas:
+  mio: 1
+  ilt: 1
+  kidc: 1
+
+################ env 별 rollingUpdate maxSurge 정의 ###################
+rollingUpdate:
+  mio:
+    maxSurge: 1
+  ilt:
+    maxSurge: 1
+  kidc:
+    maxSurge: 1
+  maxUnavailable: 0
+
+################### container resource 정의 ################
+################# env 별 resources 정의 필요
+### enabled: true/false 로 노출 정의
+# cpu 리소스에 대한 제한 및 요청은 cpu 단위로 측정된다.
+## cpu 1개는 클라우드 공급자용 vCPU/Core 1개와 베어메탈 인텔 프로세서에서의 1개 하이퍼스레드 에 해당
+## 분수 요청 허용.  0.5 = cpu 1개를 요구하는 컨테이너의 절반만큼 cpu 보장
+## 0.1 ~= 100m
+## cpu는 항상 절대 수량으로 요청되며, 상대적 수량이 아니다.
+# memory 요청은 바이트 단위로 측정된다.  E,P,T,G,M,K와 같은 접미사 중 하나 사용. (Ei, Pi, Ti, Gi, Mi, Ki 와 같은 접미사 또한 가능)
+# requests : 처음 container가 생성될 때 할당
+# limits   : container 할당 / 할당 후 최대 할당 가능한 max
+containerResources:
+  enabled: true
+  resources:
+    mio:
+      limits:
+        memory: 2Gi
+      requests:
+        memory: 1Gi
+    ilt:
+      limits:
+        memory: 8Gi
+      requests:
+        memory: 4Gi
+    kidc:
+      limits:
+        memory: 16Gi
+      requests:
+        memory: 8Gi
+
+################ hostpath volume mount 정의 ###############
+### enabled: true/false 로 노출 정의
+#container에 정의될 mount path
+containerVolume:
+  enabled: true
+  volumeMounts:
+    - name: privatekey
+      mountPath: /etc/asd-private.key
+    - name: localtime
+      mountPath: /etc/localtime
+    - name: logdirectory
+      mountPath: /var/log/ti-tools_zookeeper-ui
+nodeVolume:
+  volumes:
+    - name: privatekey
+      hostPath:
+        path: /etc/asd-private.key
+    - name: localtime
+      hostPath:
+        path: /etc/localtime
+    - name: logdirectory
+      hostPath:
+        path: /var/log/ti-tools_zookeeper-ui
+    - name: logdir
+      hostPath:
+        path: /var/log
+#################### livenessProbe 정의 ####################
+### enabled: true/false 로 노출 정의
+### livenessProbe를 정의한다면, command / httpGet / TCP 중 1개만 정의 가능. 2가지 이상 불가능
+# 컨테이너가 정상 동작 중인지 check, probe가 실패 시 restartPolicy 적용
+podLivenessProbe:
+  enabled: true
+  livenessProbe:
+    tcpSocket:
+      port: 20105           # service port를 노출하지 않으므로 admin port로 설정한다.
+    initialDelaySeconds: 5  # container가 시작된 후 delay seconds
+    periodSeconds: 3600     # 재수행 delay seconds
+##### COMMAND ###
+### command check
+###  exec:
+###    command:
+###    - /bin/bash
+###    - cat
+###    - /tmp/test.sh
+##### HTTP request ###
+### 설정 내용으로 HTTP GET 요청 check, 200 <= return <400 == success
+### httpGet:
+###   host: asd.ahnlab.com
+###   path: /
+###   port: 8080
+###    httpHeaders:   # 요청에 지정할 custom header
+###    - name: custom-header
+###      value: Awesome
+##### check option ###
+
+### successThreshold: 1 # 최소 성공 count , default : 1
+### timeoutSeconds: 10 # default : 1
+
+#################### readinessProbe정의 ####################
+### enabled: true/false 로 노출 정의
+# 컨테이너가 요청을 처리할 준비가 되었는지 여부
+podReadinessProbe:
+  enabled: true
+  readinessProbe:
+    tcpSocket:
+      port: 20102           # service port를 노출하지 않으므로 admin port로 설정한다.
+    initialDelaySeconds: 5  # container가 시작된 후 delay seconds
+    periodSeconds: 5        # 재수행 delay seconds
+#### COMMAND ###
+### command check
+### exec:
+###   command:
+###     - cat
+###     - /tmp/healthy
+#### HTTP request ###
+### 설정 내용으로 HTTP GET 요청 check, 200 <= return <400 == success
+### httpGet:
+###   host: asd.ahnlab.com
+###   path: /
+###   port: 8080
+###   httpHeaders:   # 요청에 지정할 custom header
+###     - name: custom-header
+###       value: Awesome
+##### check option ###
+### successThreshold: 1 # 최소 성공 count , default : 1
+### timeoutSeconds: 10 # default : 1 컨테이너가 요청을 처리할 준비가 되었는지 여부
+
+podNodeSelector:
+  enabled: false
+  nodeSelector:
+    nodetype: asd-proxy

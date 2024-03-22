@@ -3,6 +3,10 @@ import sbt.Keys._
 import scala.language.postfixOps
 import scala.sys.process._
 
+val finchVersion = "0.31.0"
+val circeVersion = "0.13.0"
+val circeOpticsVersion = "0.13.0"
+
 lazy val root = (project in file("."))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings: _*)
@@ -16,10 +20,20 @@ lazy val root = (project in file("."))
     name := "tools_zookeeper-ui",
     version := "0.1.0-SNAPSHOT",
     libraryDependencies ++= Seq(
+      "com.ahnlab.asd" %% "asd-util-common" % "1.12.0",
+      "com.google.code.gson" % "gson" % "2.10.1",
+      "com.github.finagle" %% "finch-core" % finchVersion,
+      "com.github.finagle" %% "finch-circe" % finchVersion,
+      "io.circe" %% "circe-generic" % circeVersion,
+      "io.circe" %% "circe-generic-extras" % circeVersion,
+      "io.circe" %% "circe-core" % circeVersion,
+      "io.circe" %% "circe-parser" % circeVersion,
+      "io.circe" %% "circe-optics" % circeOpticsVersion,
+      "org.scalatest" %% "scalatest" % "3.2.17" % "test,it",
       "org.springframework.boot" % "spring-boot-starter-web" % "2.4.13",
       "org.springframework.boot" % "spring-boot-starter-test" % "2.6.15" % Test,
+      "org.springframework.boot" % "spring-boot-starter-validation" % "2.5.4",
       "org.junit.platform" % "junit-platform-launcher" % "1.10.1" % Test,
-      "org.springframework.boot" % "spring-boot-starter-validation" % "2.7.18",
       "org.projectlombok" % "lombok" % "1.18.30" % "provided",
       "org.apache.zookeeper" % "zookeeper" % "3.9.1"
     ),
@@ -33,7 +47,7 @@ lazy val root = (project in file("."))
     dependencyOverrides ++= Seq(
       // netty-all 와 netty-common, netty-handler 등의 개별 netty 라이브러리간의 버전 차이로 인하여
       // 실행 오류가 발생하여 명시적으로 netty-all 라이브러리의 버전을 상위 버전인 개별 netty 라이브러리의 버전과 동일하게 고정함.
-      "io.netty" % "netty-all" % LibVersion.nettyVersion
+      "io.netty" % "netty-all" % LibVersion.nettyVersion,
     ),
     /** Add scalac options for more warning messages
      *
