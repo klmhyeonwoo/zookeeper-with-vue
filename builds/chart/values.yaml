@@ -135,7 +135,7 @@ podReadinessProbe:
   enabled: true
   readinessProbe:
     tcpSocket:
-      port: 20102           # service port를 노출하지 않으므로 admin port로 설정한다.
+      port: 12106           # service port를 노출하지 않으므로 admin port로 설정한다.
     initialDelaySeconds: 5  # container가 시작된 후 delay seconds
     periodSeconds: 5        # 재수행 delay seconds
 #### COMMAND ###
