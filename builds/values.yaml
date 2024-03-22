@@ -16,10 +16,10 @@ global:
   deploy_env:
   namespace: ti-svc
   ### namespace 변경x ###
-  servicePort: 20012
-  serviceNodePort : 20012
-  adminPort: 20105
-  adminNodePort: 20105
+  servicePort: 12006
+  serviceNodePort : 12006
+  adminPort: 12106
+  adminNodePort: 12106
   ## 서비스의 original name
   serviceName: ti-tools_zookeeper-ui
 

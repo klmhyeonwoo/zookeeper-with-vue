@@ -18,7 +18,10 @@ lazy val root = (project in file("."))
   .settings(
     organization := "com.ahnlab.ti",
     name := "tools_zookeeper-ui",
-    version := "0.1.0-SNAPSHOT",
+    version := "0.1.0",
+    //docker 경로 설정
+    prjName := "ti",
+    dockerRepoName := "atip",
     libraryDependencies ++= Seq(
       "com.ahnlab.asd" %% "asd-util-common" % "1.12.0",
       "com.google.code.gson" % "gson" % "2.10.1",
@@ -71,8 +74,6 @@ lazy val root = (project in file("."))
       "-J-XX:+UseLargePagesInMetaspace",
       "-J-Dfile.encoding=UTF-8"
     ),
-    dockerBaseImage := "abis.ahnlab.com/asd/centos-openjdk:7.9.11",
-    dockerRepository := Some("abis.ahnlab.com/ti"),
     publishHelm := {
       "curl -u%s:%s -XPUT https://%s/artifactory/%s/%s/%s/ -T %s/%s-%s.tgz"
         .format(
