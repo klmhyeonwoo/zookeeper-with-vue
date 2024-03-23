@@ -4,11 +4,11 @@ import com.ahnlab.ti.tools.zkui.config.ZookeeperConfig;
 import com.ahnlab.ti.tools.zkui.dto.ClusterDTO;
 import com.ahnlab.ti.tools.zkui.service.ZookeeperService;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 

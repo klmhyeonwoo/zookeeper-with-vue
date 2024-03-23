@@ -3,9 +3,11 @@ import sbt.Keys._
 import scala.language.postfixOps
 import scala.sys.process._
 
+val springBootVersion = "2.7.12"
 val finchVersion = "0.31.0"
 val circeVersion = "0.13.0"
 val circeOpticsVersion = "0.13.0"
+val jacksonVersion = "2.13.2"
 
 lazy val root = (project in file("."))
   .configs(IntegrationTest)
@@ -23,8 +25,13 @@ lazy val root = (project in file("."))
     prjName := "ti",
     dockerRepoName := "atip",
     libraryDependencies ++= Seq(
-      "com.ahnlab.asd" %% "asd-util-common" % "1.12.0",
-      "com.google.code.gson" % "gson" % "2.10.1",
+      "com.ahnlab.asd" %% "asd-util-common" % "1.6.1.1" exclude ("com.google.code.gson", "gson"),
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.2.2","com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-annotations" % jacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.2.2",
+      "com.fasterxml.jackson.module" % "jackson-module-paranamer" % jacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
+      "com.google.code.gson" % "gson" % "2.8.6",
       "com.github.finagle" %% "finch-core" % finchVersion,
       "com.github.finagle" %% "finch-circe" % finchVersion,
       "io.circe" %% "circe-generic" % circeVersion,
@@ -33,12 +40,13 @@ lazy val root = (project in file("."))
       "io.circe" %% "circe-parser" % circeVersion,
       "io.circe" %% "circe-optics" % circeOpticsVersion,
       "org.scalatest" %% "scalatest" % "3.2.17" % "test,it",
-      "org.springframework.boot" % "spring-boot-starter-web" % "2.4.13",
-      "org.springframework.boot" % "spring-boot-starter-test" % "2.6.15" % Test,
-      "org.springframework.boot" % "spring-boot-starter-validation" % "2.5.4",
+      "org.springframework.boot" % "spring-boot-starter-web" % springBootVersion,
+      "org.springframework.boot" % "spring-boot-starter-test" % springBootVersion % Test,
+      "org.springframework.boot" % "spring-boot-starter-validation" % springBootVersion,
       "org.junit.platform" % "junit-platform-launcher" % "1.10.1" % Test,
       "org.projectlombok" % "lombok" % "1.18.30" % "provided",
-      "org.apache.zookeeper" % "zookeeper" % "3.9.1"
+      "org.apache.zookeeper" % "zookeeper" % "3.9.1",
+      "ch.qos.logback" % "logback-classic" % "1.2.9",
     ),
     /** [[SystemdPlugin]]을 사용하는 경우 [[killTimeout]]은 기본적으로 5로 설정된다.
      * 자연스럽게 TimeoutStopSec 설정 역시 5로 설정된다.

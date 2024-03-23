@@ -1,7 +1,6 @@
 package com.ahnlab.ti.tools.zkui.controller
 
 import com.ahnlab.ti.tools.zkui.dto.ClusterDTO
-import com.ahnlab.ti.tools.zkui.helper.ITHelper.CHILD_NODE1
 import com.ahnlab.ti.tools.zkui.helper.{ITHelper, ZkConfig, ZookeeperUIApiHttpClient}
 import com.ahnlab.ti.tools.zkui.util.zookeeper.ZookeeperAccessor
 import io.circe.{Json, parser}
