@@ -1,7 +1,7 @@
 # @formatter:off
 
-$var_name='ti-tools_zookeeper-ui'
-$var_version='1.0.0'
+$var_name='ti-zookeeper-ui'
+$var_version='1.0.0-SNAPSHOT'
 
 # exe repository 설정(for exe | msi 패키지)
 class exe_repo {

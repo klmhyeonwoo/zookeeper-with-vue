@@ -19,8 +19,8 @@ lazy val root = (project in file("."))
   .enablePlugins(HelmPlugin, HelmPublishPlugin)
   .settings(
     organization := "com.ahnlab.ti",
-    name := "tools_zookeeper-ui",
-    version := "1.0.0",
+    name := "ti-zookeeper-ui",
+    version := "1.0.0-SNAPSHOT",
     //docker 경로 설정
     prjName := "ti",
     dockerRepoName := "atip",
