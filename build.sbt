@@ -20,7 +20,7 @@ lazy val root = (project in file("."))
   .settings(
     organization := "com.ahnlab.ti",
     name := "tools_zookeeper-ui",
-    version := "0.1.0",
+    version := "1.0.0",
     //docker 경로 설정
     prjName := "ti",
     dockerRepoName := "atip",
