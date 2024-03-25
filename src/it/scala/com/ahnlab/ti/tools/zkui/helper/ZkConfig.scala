@@ -6,6 +6,6 @@ object ZkConfig {
   val ClusterName: String = "asd-app"
   //val ServerHost: String = "localhost"
   val ServerHost: String = "app02.asd.ahnlab.com"
-  //val ServerIp: Int = 8080
-  val ServerIp: Int = 12006
+  //val ServerPort: Int = 8080
+  val ServerPort: Int = 12006
 }

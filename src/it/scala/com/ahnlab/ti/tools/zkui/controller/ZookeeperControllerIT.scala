@@ -16,8 +16,7 @@ import org.scalatest.matchers.should.Matchers
  *  [OnePager] https://docs.ahnlab.com/display/ATIP/Zookeeper+UI+OnePager
  */
 class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
-  //private val httpClient = new ZookeeperUIApiHttpClient("app02.asd.ahnlab.com", 20001)
-  private val httpClient = new ZookeeperUIApiHttpClient(ZkConfig.ServerHost, ZkConfig.ServerIp)
+  private val httpClient = new ZookeeperUIApiHttpClient(ZkConfig.ServerHost, ZkConfig.ServerPort)
 
   override def beforeAll(): Unit = {
     //zookeeper 서버 등록
