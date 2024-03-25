@@ -21,7 +21,7 @@ global:
   adminPort: 12106
   adminNodePort: 12106
   ## 서비스의 original name
-  serviceName: ti-tools_zookeeper-ui
+  serviceName: ti-zookeeper-ui
 
 
 ################ env 별 replica cnt 정의 ###################
@@ -81,7 +81,7 @@ containerVolume:
     - name: localtime
       mountPath: /etc/localtime
     - name: logdirectory
-      mountPath: /var/log/ti-tools_zookeeper-ui
+      mountPath: /var/log/ti-zookeeper-ui
 nodeVolume:
   volumes:
     - name: privatekey
@@ -92,7 +92,7 @@ nodeVolume:
         path: /etc/localtime
     - name: logdirectory
       hostPath:
-        path: /var/log/ti-tools_zookeeper-ui
+        path: /var/log/ti-zookeeper-ui
     - name: logdir
       hostPath:
         path: /var/log

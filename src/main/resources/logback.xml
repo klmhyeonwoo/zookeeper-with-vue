@@ -5,7 +5,7 @@
   ~ prior written permission from the author or authorized person.
   -->
 <configuration scan="true" scanPeriod="30 seconds">
-    <property name="appname" value="ti-tools_zookeeper-ui"/>
+    <property name="appname" value="ti-zookeeper-ui"/>
 
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 로그 남기는 경로는 filebeat가 로그 수집하는 경로인 다음 두 가지 경로 중 하나여야 한다.
