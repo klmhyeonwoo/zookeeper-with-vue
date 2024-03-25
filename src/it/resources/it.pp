@@ -54,6 +54,7 @@ node 'app01.asd.ahnlab.com' {
 
 node 'app02.asd.ahnlab.com' {
   include yum_repo
+  include helm_repo_update
 
   helm { '${var_name}':
     repo    => local,
