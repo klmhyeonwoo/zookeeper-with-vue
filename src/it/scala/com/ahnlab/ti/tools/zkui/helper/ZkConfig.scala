@@ -5,7 +5,7 @@ object ZkConfig {
   //val DaZkHosts: String = "localhost:2184"
   val ClusterName: String = "asd-app"
   //val ServerHost: String = "localhost"
-  val ServerHost: String = "app02.asd.ahnlab.com"
+  val ServerHost: String = "app01.asd.ahnlab.com"
   //val ServerPort: Int = 8080
   val ServerPort: Int = 12006
 }
