@@ -20,16 +20,16 @@ public class ZookeeperController {
 
     @GetMapping("/api/zkui/clusters/{clusterName}/tree")
     public Map<String, Object> handlerGetChildren(
-            @PathVariable String clusterName,
-            @RequestParam(required = true) String path) {
+            @PathVariable("clusterName") String clusterName,
+            @RequestParam(value="path", required = true) String path) {
         return zookeeperService.getChildren(path, ZookeeperConfig.getCluster(clusterName).split(",")[0]);
     }
 
     @GetMapping("/api/zkui/clusters/{clusterName}/node")
     public Map<String, Object> handlerGetNode(
-            @PathVariable String clusterName,
-            @RequestParam(required = true) String path,
-            @RequestParam(required = false) boolean meta) {
+            @PathVariable("clusterName") String clusterName,
+            @RequestParam(value = "path", required = true) String path,
+            @RequestParam(value = "meta", required = false) boolean meta) {
         Map<String, Object> result = new HashMap<String, Object>(){{
             put("value", zookeeperService.getData(path, ZookeeperConfig.getCluster(clusterName).split(",")[0]));
         }};
@@ -40,9 +40,9 @@ public class ZookeeperController {
 
     @PostMapping(value = "/api/zkui/clusters/{clusterName}/node", consumes = MediaType.TEXT_PLAIN_VALUE)
     public Map<String, String> handlerSetNode(
-            @PathVariable String clusterName,
-            @RequestParam(required = true) String path,
-            @RequestParam(required = false) boolean overwrite,
+            @PathVariable("clusterName") String clusterName,
+            @RequestParam(value = "path", required = true) String path,
+            @RequestParam(value = "overwrite", required = false) boolean overwrite,
             @RequestBody(required = true) String value
     ){
         zookeeperService.setData(path, value, ZookeeperConfig.getCluster(clusterName).split(",")[0], overwrite);
@@ -70,7 +70,7 @@ public class ZookeeperController {
 
     @GetMapping(value = "/api/zkui/clusters/{clusterName}")
     public Map<String, String> handlerGetCluster(
-            @PathVariable String clusterName
+            @PathVariable("clusterName") String clusterName
     ) {
         return new HashMap<String, String>(){{
             put(clusterName, ZookeeperConfig.getCluster(clusterName));
