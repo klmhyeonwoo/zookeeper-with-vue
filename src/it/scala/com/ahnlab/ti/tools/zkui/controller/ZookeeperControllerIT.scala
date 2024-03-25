@@ -1,7 +1,7 @@
 package com.ahnlab.ti.tools.zkui.controller
 
 import com.ahnlab.ti.tools.zkui.dto.ClusterDTO
-import com.ahnlab.ti.tools.zkui.helper.{ITHelper, ZkConfig, ZookeeperUIApiHttpClient}
+import com.ahnlab.ti.tools.zkui.helper.{Configs, ITHelper, ZookeeperUIApiHttpClient}
 import com.ahnlab.ti.tools.zkui.util.zookeeper.ZookeeperAccessor
 import io.circe.{Json, parser}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
@@ -16,7 +16,7 @@ import org.scalatest.matchers.should.Matchers
  *  [OnePager] https://docs.ahnlab.com/display/ATIP/Zookeeper+UI+OnePager
  */
 class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
-  private val httpClient = new ZookeeperUIApiHttpClient(ZkConfig.ServerHost, ZkConfig.ServerPort)
+  private val httpClient = new ZookeeperUIApiHttpClient(Configs.ServerHost, Configs.ServerPort)
 
   override def beforeAll(): Unit = {
     //zookeeper 서버 등록
@@ -28,7 +28,7 @@ class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfte
     ITHelper.insertMockDatas()
 
     //When
-    val response = httpClient.getChildren(ZkConfig.ClusterName, "/node")
+    val response = httpClient.getChildren(Configs.ClusterName, "/node")
 
     //Then
     toJson(response.contentString) match {
@@ -53,7 +53,7 @@ class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfte
     val value = "value"
 
     //When
-    val response = httpClient.setNode(ZkConfig.ClusterName, path, value = value)
+    val response = httpClient.setNode(Configs.ClusterName, path, value = value)
 
     //Then
     toJson(response.contentString) match {
@@ -69,7 +69,7 @@ class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfte
     }
 
     //Mock 데이터 삭제
-    val zk = new ZookeeperAccessor().getConnection(ZkConfig.DaZkHosts)
+    val zk = new ZookeeperAccessor().getConnection(Configs.DaZkHosts)
     zk.delete(path, -1)
     zk.delete("/node", -1)
   }
@@ -81,7 +81,7 @@ class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfte
     ITHelper.insertMockDatas()
 
     //When
-    val response = httpClient.getNode(ZkConfig.ClusterName, "/node/child1", meta = false)
+    val response = httpClient.getNode(Configs.ClusterName, "/node/child1", meta = false)
 
     //Then
     toJson(response.contentString) match {
@@ -102,8 +102,8 @@ class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfte
 
   private def addZookeeperCluster() : Unit = {
     val clusterDTO = new ClusterDTO
-    clusterDTO.setHost(ZkConfig.DaZkHosts)
-    clusterDTO.setName(ZkConfig.ClusterName)
+    clusterDTO.setHost(Configs.DaZkHosts)
+    clusterDTO.setName(Configs.ClusterName)
     httpClient.addCluster(clusterDTO)
     println("add cluster...")
   }

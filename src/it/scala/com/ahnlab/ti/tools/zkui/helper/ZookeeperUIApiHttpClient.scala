@@ -8,7 +8,7 @@ import com.twitter.util.Await
 
 class ZookeeperUIApiHttpClient(host: String, port: Int) {
   private val client = Http.client.newService(s"$host:$port")
-  val gson = new Gson()
+  private val gson = new Gson()
 
   def getChildren(clusterName: String, path: String): Response = {
     val api = s"/api/zkui/clusters/$clusterName/tree?path=$path"

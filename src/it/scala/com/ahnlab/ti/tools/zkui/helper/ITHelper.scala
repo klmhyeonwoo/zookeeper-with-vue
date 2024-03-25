@@ -12,7 +12,7 @@ object ITHelper {
   val data2 = "value2"
 
   def insertMockDatas(): Unit = {
-    val zk = new ZookeeperAccessor().getConnection(ZkConfig.DaZkHosts)
+    val zk = new ZookeeperAccessor().getConnection(Configs.DaZkHosts)
     zk.create(PARENT_NODE, "".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
     zk.create(CHILD_NODE1, data1.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
     zk.create(CHILD_NODE2, data2.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
@@ -20,7 +20,7 @@ object ITHelper {
   }
 
   def deleteMockDatas(): Unit = {
-    val zk = new ZookeeperAccessor().getConnection(ZkConfig.DaZkHosts)
+    val zk = new ZookeeperAccessor().getConnection(Configs.DaZkHosts)
     zk.delete(CHILD_NODE1, -1)
     zk.delete(CHILD_NODE2, -1)
     zk.delete(PARENT_NODE, -1)
