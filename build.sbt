@@ -32,8 +32,6 @@ lazy val root = (project in file("."))
       "com.fasterxml.jackson.module" % "jackson-module-paranamer" % jacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
       "com.google.code.gson" % "gson" % "2.8.6",
-      "com.github.finagle" %% "finch-core" % finchVersion,
-      "com.github.finagle" %% "finch-circe" % finchVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-generic-extras" % circeVersion,
       "io.circe" %% "circe-core" % circeVersion,
