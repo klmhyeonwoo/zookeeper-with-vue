@@ -3,7 +3,8 @@ package com.ahnlab.ti.tools.zkui.controller
 import com.ahnlab.ti.tools.zkui.dto.ClusterDTO
 import com.ahnlab.ti.tools.zkui.helper.{Configs, ITHelper, ZookeeperUIApiHttpClient}
 import com.ahnlab.ti.tools.zkui.util.zookeeper.ZookeeperAccessor
-import io.circe.{Json, parser}
+import io.circe.parser._
+import io.circe.{Decoder, Json, parser}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.flatspec.AnyFlatSpec
@@ -74,20 +75,22 @@ class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfte
   }
 
   //metadata 는 저장 시간 등이 있기 때문에, 데이터를 정확하게 파악할 수 없다.
-  //그렇기 때문에, 테스트 시에 value 값만 테스트 하도록 한다.
+  //그렇기 때문에, 테스트 시에 value 값과 metadata 의 고정 값인 dataLength 만을 테스트 하도록 한다.
   it should "[OnePager] 6.3.4 metadata 조회" in {
     //When
-    val response = httpClient.getNode(Configs.ClusterName, "/node/child1", meta = false)
+    val response = httpClient.getNode(Configs.ClusterName, "/node/child1", meta = true)
+    val resultJson = parse(response.contentString).getOrElse(Json.Null)
 
-    //Then
-    toJson(response.contentString) match {
-      case Right(json) => json should be(
-        toJson("""
-                 |{
-                 |   "value": "value1"
-                 |}
-                 |""".stripMargin).getOrElse(fail("JSON parsing failed"))
-      )
+    val dataLength: Decoder.Result[String] = resultJson.hcursor.downField("metadata").downField("dataLength").as[String]
+    val value: Decoder.Result[String] = resultJson.hcursor.downField("value").as[String]
+
+    dataLength match {
+      case Right("6") => println("[6.3.4 metadata 조회 - metadata 값] test pass")
+      case Left(error) => fail(s"$error")
+    }
+
+    value match {
+      case Right("value1") => println("[6.3.4 metadata 조회 - value 값] test pass")
       case Left(error) => fail(s"$error")
     }
 
