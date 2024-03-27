@@ -19,7 +19,7 @@ class ZookeeperControllerIT extends AnyFlatSpec with Matchers with BeforeAndAfte
   private val httpClient = new ZookeeperUIApiHttpClient(Configs.ServerHost, Configs.ServerPort)
 
   override def beforeAll(): Unit = {
-    //zookeeper 서버 등록
+    // [OnePager] 6.3.1 zookeeper 서버 등록
     addZookeeperCluster()
   }
 
