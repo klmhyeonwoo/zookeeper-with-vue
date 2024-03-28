@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ (C) 2024 AhnLab, Inc. All rights reserved.
+  ~ Any part of this source code can not be copied with any method without
+  ~ prior written permission from the author or authorized person.
+  -->
+<configuration scan="true" scanPeriod="30 seconds">
+    <property name="appname" value="ti-zookeeper-ui"/>
+
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 로그 남기는 경로는 filebeat가 로그 수집하는 경로인 다음 두 가지 경로 중 하나여야 한다.
+        - /var/log/**/asd-*-logstash.log
+        - /var/**/asd-*-logstash.log
+
+        -->
+        <file>/var/log/${appname}/${appname}-${hostname}-logstash.log</file>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>{ "appname" : "${appname}" }</pattern>
+                </pattern>
+                <timestamp/>
+                <logLevel/>
+                <loggerName/>
+                <threadName/>
+                <stackTrace/>
+                <context/>
+                <throwableClassName>
+                    <useSimpleClassName>false</useSimpleClassName>
+                </throwableClassName>
+                <throwableRootCauseClassName>
+                    <useSimpleClassName>false</useSimpleClassName>
+                </throwableRootCauseClassName>
+                <message/>
+                <tags/>
+                <nestedField>
+                    <fieldName>${appname}</fieldName>
+                    <providers>
+                        <mdc/>
+                        <logstashMarkers/>
+                        <arguments/>
+                    </providers>
+                </nestedField>
+            </providers>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/${appname}/${appname}-${hostname}-logstash.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+
+    <root level="DEBUG">
+        <appender-ref ref="ROLLING"/>
+    </root>
+
+    <logger name="com.twitter.finagle" level="OFF"/>
+
+</configuration>
