@@ -10,8 +10,10 @@ const { state } = storeToRefs(store);
 </script>
 
 <template>
-  <DoubleInputModal v-if="state" />
-  <RouterView />
+  <Fragment>
+    <DoubleInputModal v-if="state" />
+    <RouterView />
+  </Fragment>
 </template>
 
 <style scoped></style>

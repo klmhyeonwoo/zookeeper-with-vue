@@ -6,9 +6,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <Fragment>
     <div class="name" :class="props.class">· {{ props.name }}</div>
-  </Fragment>
 </template>
 
 <style scoped>

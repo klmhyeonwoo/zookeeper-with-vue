@@ -6,16 +6,26 @@ import AhnLabIcon from "../../../assets/ahnlabIcon.svg";
 import SmallText from "../../common/text/SmallText.vue";
 import PlusIcon from "../../../assets/plusIcon.svg";
 import useModalStore from "../../../stores/modal";
+import { useApiGetCluster } from '../../../hooks/api/mainpanel/useApiGetCluster';
+import { api } from '../../../api/index';
+import { onMounted, ref, watch } from "vue";
 
 const store = useModalStore();
 const { openModal } = store;
-const Mock = Object.entries(MockData);
+const ClusterData = ref("");
 const props = defineProps({
   cluster: {
     type: String,
     default: "",
   },
 });
+
+const { data } = useApiGetCluster();
+
+watch(data, () => {
+  ClusterData.value = Object.entries(data.value);
+})
+
 </script>
 
 <template>
@@ -27,11 +37,11 @@ const props = defineProps({
     <div class="sidebar-cluster-data">
       <!-- 반응형 데이터를 뿌려줘야함 -->
       <SmallText style="color: white"
-        >현재 운용중인 클러스터 목록 ({{ Mock.length }})</SmallText
+        >현재 운용중인 클러스터 목록 ({{ ClusterData.length }})</SmallText
       >
-      <template v-if="Mock.length">
+      <template v-if="ClusterData.length">
         <ClusterItems
-          v-for="item in Mock"
+          v-for="item in ClusterData"
           :key="item[1]"
           :name="item[0]"
           :class="item[0] === cluster && 'selected'"
