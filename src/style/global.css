@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "Pretendard";
+  src: url(../assets/font/PretendardVariable.woff2);
+  font-style: normal;
+  font-display: swap;
+}
+
+body,
+button,
+input,
+input::placeholder {
+  margin: 0;
+  font-size: 16px;
+  font-family: Pretendard;
+}
+
+input {
+  color: rgb(51, 61, 75);
+}
+
+input:focus {
+  outline: none;
+}
+
+xmp {
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: auto;
+}
