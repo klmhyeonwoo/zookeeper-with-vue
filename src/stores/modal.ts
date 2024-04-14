@@ -1,9 +1,10 @@
 import { useApiRegisterCluster } from "../hooks/api/sidepanel/useApiRegisterCluster";
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 export const useModalStore = defineStore("modal", () => {
-  const modalState = ref(false);
+  const doubleInputModalState = ref(false);
+  const warningModalState = ref(false);
   const modalInfo = ref({
     firstValue: "",
     firstLabel: "",
@@ -11,6 +12,9 @@ export const useModalStore = defineStore("modal", () => {
     twiceValue: "",
     twiceLabel: "",
     twicePlaceholder: "",
+    clusterAddNodeAddress: "",
+    clusterAddNodeValue: "",
+    clusterCurNodeValue: "",
     confirm: () => {},
   });
 
@@ -31,6 +35,7 @@ export const useModalStore = defineStore("modal", () => {
             name: modalInfo.value.twiceValue,
           });
         };
+        doubleInputModalState.value = true;
         break;
       case "addNodeTree":
         (modalInfo.value.firstValue = ""),
@@ -40,31 +45,45 @@ export const useModalStore = defineStore("modal", () => {
           (modalInfo.value.twiceLabel = "노드 값"),
           (modalInfo.value.twicePlaceholder =
             "노드에 추가하고자 하는 값을 입력해주세요");
+        doubleInputModalState.value = true;
+        break;
+      case "duplicateNodeData":
+          modalInfo.value.firstValue = "-",
+          modalInfo.value.twiceValue = "-",
+          modalInfo.value.confirm = () => {
+            alert("중복되었습니다!");
+          }
+          warningModalState.value = true;
         break;
       default:
         break;
     }
-    modalState.value = true;
     document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
+    const checkerOpenModal = () => {
+      const checkerList = [doubleInputModalState, warningModalState];
+      checkerList.forEach((item) => {
+        item.value = false;
+      })
+    }
     if (modalInfo.value.firstValue || modalInfo.value.twiceValue) {
       if (
         window.confirm(
           `변경 사항이 저장되지 않을 수 있습니다, 정말 떠나시겠습니까?`,
         )
       ) {
-        modalState.value = false;
+        checkerOpenModal();
         document.body.style.overflow = "auto";
       }
     } else {
-      modalState.value = false;
+      checkerOpenModal();
       document.body.style.overflow = "auto";
     }
   };
 
-  return { modalState, openModal, closeModal, confirm, modalInfo };
+  return { doubleInputModalState, warningModalState ,openModal, closeModal, confirm, modalInfo };
 });
 
 export default useModalStore;

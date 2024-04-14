@@ -6,15 +6,17 @@ import ModalWrapper from "./components/common/modal/ModalWrapper.vue";
 import { useModalStore } from "./stores/modal";
 import { useToastStore } from "./stores/toast";
 import CustomToast from "./components/common/CustomToast.vue";
+import WarningModal from "./components/common/modal/WarningModal.vue";
 
 const modalStore = useModalStore();
-const { modalState } = storeToRefs(modalStore);
+const { doubleInputModalState, warningModalState } = storeToRefs(modalStore);
 const toastStore = useToastStore();
 const { toastState } = storeToRefs(toastStore);
 </script>
 
 <template>
-    <DoubleInputModal v-if="modalState" />
+    <DoubleInputModal v-if="doubleInputModalState" />
+    <WarningModal v-if="warningModalState"/>
     <CustomToast v-if="toastState" />
     <RouterView />
 </template>

@@ -7,9 +7,10 @@ import "vue-json-pretty/lib/styles.css";
 import { useApiGetClusterTree } from "../../../hooks/api/sidepanel/useApiGetClusterTree";
 import { useApiRegisterNode } from "../../../hooks/api/mainpanel/useApiRegisterNode";
 import { useApiGetNodeMeta } from "../../../hooks/api/mainpanel/useApiGetNodeMeta";
-import { computed, nextTick, onMounted, onUpdated, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import CustomInput from "../../../components/common/CustomInput.vue";
-import router from "../../../router/index";
+import {storeToRefs} from "pinia";
+import { api } from "../../../api/index";
 
 const props = defineProps({
   cluster: String,
@@ -19,7 +20,7 @@ const props = defineProps({
 const emits = defineEmits(["updateAddress"]);
 
 const store = useModalStore();
-const { openModal } = store;
+const { modalInfo } = storeToRefs(store);
 const address = ref("/");
 const data = ref("");
 const metaData = ref("");
@@ -28,7 +29,6 @@ const nodeValue = ref("");
 const getClusterTree = useApiGetClusterTree(props.cluster, address.value);
 const getMetaData = useApiGetNodeMeta();
 const registerNode = useApiRegisterNode();
-const clicked = ref(false);
 
 /** 요청한 API의 데이터를 화면 상의 최신 데이터로 업데이트를 진행합니다. */
 const updateCluster = async (cluster = props.cluster, host = address.value) => {
@@ -89,9 +89,18 @@ const handleRegisterNode = async () => {
   address.value = await "/";
   await emits("updateAddress", address.value);
 
-  if (registerNode.isSuccess) {
+  if (registerNode.isSuccess.value) {
     nodeValue.value = "";
     nodeAddress.value = "/";
+  }
+
+  if (registerNode.isError) {
+    /** 에러가 발생하면, 현재의 주소에 따른 노드 값을 불러오고 모달에 표시를 해줍니다. */
+    api.get(`/api/zkui/clusters/${clusterName.value}/node?path=${nodeAddress.value}`).then((res) => {
+      modalInfo.value.clusterAddNodeAddress = nodeAddress.value;
+      modalInfo.value.clusterAddNodeValue = nodeValue.value;
+      modalInfo.value.clusterCurNodeValue = res.data.value;
+    })
   }
 };
 
