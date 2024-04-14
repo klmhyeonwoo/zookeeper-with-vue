@@ -1,4 +1,0 @@
-{
-  "asd-app": "zk1.asd.ahnlab.com:2181,zk2.asd.ahnlab.com:2181",
-  "ti-app": "localhost:2181,localhost:2182"
-}
