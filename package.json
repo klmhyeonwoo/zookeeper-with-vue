@@ -4,20 +4,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node_modules/.bin/vite",
-    "serve": "node_modules/.bin/vite --port 3000",
-    "build": "node_modules/.bin/run-p type-check \\\\\\\"build-only {@}\\\\\\\" --",
-    "preview": "node_modules/.bin/vite preview",
-    "build-only": "node_modules/.bin/vite build",
-    "type-check": "node_modules/.bin/vue-tsc --build --force",
-    "lint": "node_modules/.bin/eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path ../.gitignore",
-    "format": "node_modules/.bin/prettier --write src/"
+    "dev": "vite",
+    "serve": "vite --port 3000",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@tanstack/vue-query": "^5.28.9",
     "axios": "^1.6.8",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
+    "vue-json-pretty": "^2.4.0",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {

@@ -1,12 +1,10 @@
 <script setup>
-import { storeToRefs } from "pinia";
-
 const props = defineProps({
   label: String,
   modelValue: String,
   placeholder: String,
 });
-const emits = defineEmits(["update:modelValue"]);
+defineEmits(["update:modelValue"]);
 </script>
 
 <template>

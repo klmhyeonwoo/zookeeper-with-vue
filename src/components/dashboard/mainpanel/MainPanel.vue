@@ -4,11 +4,18 @@ import DataSection from "./DataSection.vue";
 
 defineProps({
   cluster: String,
+  address: String,
 });
+
+const emits = defineEmits(["updateAddress"]);
 
 const scaledSingleNumber = (number) => {
   if (number < 10) return `0${number}`;
   return number;
+};
+
+const updateAddress = (address) => {
+  emits("updateAddress", address);
 };
 
 let dateObj = new Date();
@@ -51,7 +58,12 @@ onUnmounted(() => clearInterval(timer));
         클러스터 정보 및 기능 이용을 위해 좌측 패널에서 클러스터를 클릭해주세요
       </div>
     </div>
-    <DataSection :cluster="cluster" v-if="cluster" />
+    <DataSection
+      :cluster="cluster"
+      :address="address"
+      v-if="cluster"
+      @update-address="updateAddress"
+    />
   </section>
 </template>
 
@@ -59,9 +71,10 @@ onUnmounted(() => clearInterval(timer));
 .section {
   display: flex;
   flex-direction: column;
-  padding: 4rem;
+  padding: 2rem 4rem;
   row-gap: 2rem;
   width: 100%;
+  margin-left: 350px;
 }
 
 .top {

@@ -1,12 +1,16 @@
 <template>
-  <button :style="style">
+  <button
+    :style="[style, disabled && 'filter: grayscale(100%); opacity: 40%;']"
+    :disabled="disabled"
+  >
     <slot />
   </button>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   style: Object,
+  disabled: Boolean,
 });
 </script>
 

@@ -5,10 +5,15 @@ import { ref } from "vue";
 
 const currentCluster = ref("");
 const clusterContent = ref("");
+const clusterAddress = ref("");
 
-const selectCluster = (name, address) => {
+const selectCluster = (name, host) => {
   currentCluster.value = name;
-  clusterContent.value = address;
+  clusterContent.value = host;
+};
+
+const updateAddress = (address) => {
+  clusterAddress.value = address;
 };
 </script>
 
@@ -16,12 +21,18 @@ const selectCluster = (name, address) => {
   <main>
     <!-- TODO : 레이아웃 배치 진행 -->
     <SidePanel :cluster="currentCluster" @select-cluster="selectCluster" />
-    <MainPanel :cluster="currentCluster" />
+    <MainPanel
+      :cluster="currentCluster"
+      :address="clusterAddress"
+      @update-address="updateAddress"
+    />
   </main>
 </template>
 
 <style scoped>
 main {
   display: flex;
+  height: 100%;
+  width: 100vw;
 }
 </style>

@@ -1,19 +1,23 @@
-import {api} from "../../../api/index";
-import {useQuery} from "@tanstack/vue-query";
+import { api } from "../../../api/index";
+import { useQuery } from "@tanstack/vue-query";
 
 type clusterTreeProps = {
-    [index: string]: string[];
-}
+  [index: string]: string[];
+};
 
-export const useApiGetClusterTree = (DYNAMIC_QUERY_KEY: string, searchQuery: string) => {
-    console.log(DYNAMIC_QUERY_KEY, searchQuery);
-    const getClusterTree = async (clusterName: string) => {
-        const res = await api.get(`/api/zkui/clusters/${clusterName}/tree?path=${searchQuery}`);
-        return res.data as clusterTreeProps;
-    }
+export const useApiGetClusterTree = () => {
+  const getClusterTree = async (clusterName: string, searchQuery: string) => {
+    console.log("함수 실행 :", clusterName);
+    const res = await api.get(
+      `/api/zkui/clusters/${clusterName}/tree?path=${searchQuery}`,
+    );
+    return res.data as clusterTreeProps;
+  };
 
-    return useQuery({
-        queryKey: [DYNAMIC_QUERY_KEY, searchQuery],
-        queryFn: () => getClusterTree(DYNAMIC_QUERY_KEY)
-    })
-}
+  return (clusterName: string, searchQuery: string) =>
+    useQuery({
+      queryKey: [clusterName, searchQuery, Date.now()],
+      queryFn: () => getClusterTree(clusterName, searchQuery),
+      gcTime: 0,
+    });
+};

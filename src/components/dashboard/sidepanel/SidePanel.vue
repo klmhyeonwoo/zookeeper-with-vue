@@ -6,9 +6,9 @@ import SmallText from "../../common/text/SmallText.vue";
 import PlusIcon from "../../../assets/plusIcon.svg";
 import useModalStore from "../../../stores/modal";
 import useGlobalState from "../../../stores/state";
-import { useApiGetCluster } from '../../../hooks/api/mainpanel/useApiGetCluster';
-import {toRefs, watch} from "vue";
-import {storeToRefs} from "pinia";
+import { useApiGetCluster } from "../../../hooks/api/mainpanel/useApiGetCluster";
+import { toRefs, watch } from "vue";
+import { storeToRefs } from "pinia";
 
 const store = useModalStore();
 const { openModal } = store;
@@ -24,17 +24,17 @@ const props = defineProps({
 
 const { data } = useApiGetCluster();
 watch(data, () => {
-  updateClusterData((Object.entries(data.value)));
-}, )
+  updateClusterData(Object.entries(data.value));
+});
 
 const handleClick = () => {
   const tmp = {
-    "host": "zk1.asd.ahnlab.com:2181,zk2.asd.ahnlab.com:2181",
-    "name": "asd-app"
-  }
+    host: "zk1.asd.ahnlab.com:2181,zk2.asd.ahnlab.com:2181",
+    name: "asd-app",
+  };
   const dataSet = [tmp.name, tmp.host];
-  clusterData.value.push(dataSet)
-}
+  clusterData.value.push(dataSet);
+};
 </script>
 
 <template>
@@ -78,6 +78,7 @@ const handleClick = () => {
 }
 
 .sidebar {
+  position: fixed;
   max-width: 10%;
   min-width: 350px;
   height: 100vh;
@@ -90,6 +91,7 @@ const handleClick = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 10000;
 }
 
 .sidebar-header {
