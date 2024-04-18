@@ -41,7 +41,6 @@ export const useApiImportCluster = () => {
       openToast(true);
     },
     onError(err) {
-      console.log(err);
       openToast(false);
     },
   });

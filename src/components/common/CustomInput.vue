@@ -1,10 +1,10 @@
 <script setup>
-const props = defineProps({
-  label: String,
-  modelValue: String,
-  placeholder: String,
-});
-defineEmits(["update:modelValue"]);
+  const props = defineProps({
+    label: String,
+    modelValue: String,
+    placeholder: String,
+  });
+  defineEmits(["update:modelValue"]);
 </script>
 
 <template>
@@ -19,25 +19,25 @@ defineEmits(["update:modelValue"]);
 </template>
 
 <style module>
-.container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.7rem;
-}
+  .container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.7rem;
+  }
 
-input {
-  border: none;
-  box-shadow: inset 0 0 0 1px rgba(0, 27, 55, 0.1);
-  border-radius: 0.7rem;
-  width: 100%;
-  min-height: 3.2rem;
-  height: 100%;
-  padding-left: 1rem;
-  box-sizing: border-box;
-}
+  input {
+    border: none;
+    box-shadow: inset 0 0 0 1px rgba(0, 27, 55, 0.1);
+    border-radius: 0.7rem;
+    width: 100%;
+    min-height: 3.2rem;
+    height: 100%;
+    padding-left: 1rem;
+    box-sizing: border-box;
+  }
 
-label {
-  color: #4e5968;
-}
+  label {
+    color: #4e5968;
+  }
 </style>

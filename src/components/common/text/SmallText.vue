@@ -5,15 +5,15 @@
 </template>
 
 <script setup>
-defineProps({
-  style: Object,
-});
+  defineProps({
+    style: Object,
+  });
 </script>
 
 <style scoped>
-span {
-  font-weight: 300;
-  font-size: 14px;
-  margin-bottom: 0.5rem;
-}
+  span {
+    font-weight: 300;
+    font-size: 14px;
+    margin-bottom: 0.5rem;
+  }
 </style>

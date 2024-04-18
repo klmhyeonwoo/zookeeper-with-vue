@@ -1,12 +1,12 @@
 <script setup>
-import ModalWrapper from "./ModalWrapper.vue";
-import CustomInput from "../CustomInput.vue";
-import { ref } from "vue";
-import useModalStore from "../../../stores/modal";
-import { storeToRefs } from "pinia";
+  import ModalWrapper from "./ModalWrapper.vue";
+  import CustomInput from "../CustomInput.vue";
+  import { ref } from "vue";
+  import useModalStore from "../../../stores/modal";
+  import { storeToRefs } from "pinia";
 
-const store = useModalStore();
-const { modalInfo } = storeToRefs(store);
+  const store = useModalStore();
+  const { modalInfo } = storeToRefs(store);
 </script>
 
 <template>

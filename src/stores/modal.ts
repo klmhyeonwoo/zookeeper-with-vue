@@ -1,10 +1,23 @@
 import { useApiRegisterCluster } from "../hooks/api/sidepanel/useApiRegisterCluster";
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { defineStore, storeToRefs } from "pinia";
+import { reactive, ref, toRef, toRefs } from "vue";
+import { api } from "../api";
+import useToastStore from "../stores/toast";
+import useGlobalState from "../stores/state";
+import { registerNode } from "../hooks/api/mainpanel/useApiRegisterNode";
+import { getClusterTree } from "../hooks/api/mainpanel/useApiGetClusterTree";
+import { getMetaData } from "../hooks/api/mainpanel/useApiGetNodeMeta";
 
 export const useModalStore = defineStore("modal", () => {
   const doubleInputModalState = ref(false);
   const warningModalState = ref(false);
+
+  const toastStore = useToastStore();
+  const { openToast } = toastStore;
+
+  const globalStore = useGlobalState();
+  const { clusterTreeData, clusterMetaData } = storeToRefs(globalStore);
+
   const modalInfo = ref({
     firstValue: "",
     firstLabel: "",
@@ -15,6 +28,7 @@ export const useModalStore = defineStore("modal", () => {
     clusterAddNodeAddress: "",
     clusterAddNodeValue: "",
     clusterCurNodeValue: "",
+    clusterName: "",
     confirm: () => {},
   });
 
@@ -48,12 +62,43 @@ export const useModalStore = defineStore("modal", () => {
         doubleInputModalState.value = true;
         break;
       case "duplicateNodeData":
-          modalInfo.value.firstValue = "-",
-          modalInfo.value.twiceValue = "-",
-          modalInfo.value.confirm = () => {
-            alert("중복되었습니다!");
-          }
-          warningModalState.value = true;
+        (modalInfo.value.firstValue = ""),
+          (modalInfo.value.twiceValue = ""),
+          (modalInfo.value.confirm = () => {
+            registerNode(
+              modalInfo.value.clusterName,
+              modalInfo.value.clusterAddNodeValue,
+              modalInfo.value.clusterAddNodeAddress,
+              true,
+            )
+              .then(() => {
+                getClusterTree(modalInfo.value.clusterName)
+                  .then((res) => {
+                    openToast(true);
+                    clusterTreeData.value = toRef(res)
+                    closeModal();
+                  })
+                  .catch(() => {
+                    openToast(false);
+                    closeModal();
+                  });
+                getMetaData(modalInfo.value.clusterName)
+                  .then((res) => {
+                    openToast(true);
+                    clusterMetaData.value = toRef(res);
+                    closeModal();
+                  })
+                  .catch(() => {
+                    openToast(false);
+                    closeModal();
+                  });
+              })
+              .catch(() => {
+                openToast(false);
+                closeModal();
+              });
+          });
+        warningModalState.value = true;
         break;
       default:
         break;
@@ -66,8 +111,8 @@ export const useModalStore = defineStore("modal", () => {
       const checkerList = [doubleInputModalState, warningModalState];
       checkerList.forEach((item) => {
         item.value = false;
-      })
-    }
+      });
+    };
     if (modalInfo.value.firstValue || modalInfo.value.twiceValue) {
       if (
         window.confirm(
@@ -83,7 +128,14 @@ export const useModalStore = defineStore("modal", () => {
     }
   };
 
-  return { doubleInputModalState, warningModalState ,openModal, closeModal, confirm, modalInfo };
+  return {
+    doubleInputModalState,
+    warningModalState,
+    openModal,
+    closeModal,
+    confirm,
+    modalInfo,
+  };
 });
 
 export default useModalStore;

@@ -9,27 +9,29 @@ type registerNodeProps = {
   value: string;
   searchQuery: string;
 };
+
+export const registerNode = async (
+  clusterName: string,
+  value: string,
+  searchQuery: string,
+  overwriteState: boolean = false,
+) => {
+  const res = await api.post(
+    `/api/zkui/clusters/${clusterName}/node?path=${searchQuery}&overwrite=${overwriteState}`,
+    value,
+    {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    },
+  );
+  return res.data as registerNodeProps;
+};
 export const useApiRegisterNode = () => {
   const toastState = useToastStore();
   const { openToast } = toastState;
   const modalState = useModalStore();
   const { openModal } = modalState;
-  const registerNode = async (
-    clusterName: string,
-    value: string,
-    searchQuery: string,
-  ) => {
-    const res = await api.post(
-      `/api/zkui/clusters/${clusterName}/node?path=${searchQuery}`,
-      value,
-      {
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      },
-    );
-    return res.data as registerNodeProps;
-  };
 
   return useMutation({
     mutationFn: ({ clusterName, value, searchQuery }: registerNodeProps) =>
@@ -37,13 +39,13 @@ export const useApiRegisterNode = () => {
     onSuccess(res: registerNodeProps) {
       openToast(true);
     },
-    onError: (err: typeof AxiosError) => {
-      console.log("클러스터를 등록하는 도중 에러가 발생했습니다 :", err);
-      if (err.status === 409 || err.status === 404) {
+    onError: (err: AxiosError) => {
+      if (err.status === 409) {
         openModal("duplicateNodeData");
       } else {
         openToast(false);
       }
+      throw new Error("new Error");
     },
   });
 };

@@ -1,40 +1,31 @@
 <script setup>
-import ZookeeperIcon from "../../../assets/zookeeperIcon.svg";
-import ClusterItems from "./ClusterItems.vue";
-import AhnLabIcon from "../../../assets/ahnlabIcon.svg";
-import SmallText from "../../common/text/SmallText.vue";
-import PlusIcon from "../../../assets/plusIcon.svg";
-import useModalStore from "../../../stores/modal";
-import useGlobalState from "../../../stores/state";
-import { useApiGetCluster } from "../../../hooks/api/mainpanel/useApiGetCluster";
-import { toRefs, watch } from "vue";
-import { storeToRefs } from "pinia";
+  import ZookeeperIcon from "../../../assets/zookeeperIcon.svg";
+  import ClusterItems from "./ClusterItems.vue";
+  import AhnLabIcon from "../../../assets/ahnlabIcon.svg";
+  import SmallText from "../../common/text/SmallText.vue";
+  import PlusIcon from "../../../assets/plusIcon.svg";
+  import useModalStore from "../../../stores/modal";
+  import useGlobalState from "../../../stores/state";
+  import { useApiGetCluster } from "../../../hooks/api/sidepanel/useApiGetCluster";
+  import { watch } from "vue";
+  import { storeToRefs } from "pinia";
 
-const store = useModalStore();
-const { openModal } = store;
-const state = useGlobalState();
-const { updateClusterData } = state;
-const { clusterData } = storeToRefs(state);
-const props = defineProps({
-  cluster: {
-    type: String,
-    default: "",
-  },
-});
+  const store = useModalStore();
+  const { openModal } = store;
+  const state = useGlobalState();
+  const { updateClusterData } = state;
+  const { clusterData } = storeToRefs(state);
+  const props = defineProps({
+    cluster: {
+      type: String,
+      default: "",
+    },
+  });
 
-const { data } = useApiGetCluster();
-watch(data, () => {
-  updateClusterData(Object.entries(data.value));
-});
-
-const handleClick = () => {
-  const tmp = {
-    host: "zk1.asd.ahnlab.com:2181,zk2.asd.ahnlab.com:2181",
-    name: "asd-app",
-  };
-  const dataSet = [tmp.name, tmp.host];
-  clusterData.value.push(dataSet);
-};
+  const { data } = useApiGetCluster();
+  watch(data, () => {
+    updateClusterData(Object.entries(data.value));
+  });
 </script>
 
 <template>
@@ -69,67 +60,67 @@ const handleClick = () => {
 </template>
 
 <style scoped>
-.icon_p {
-  cursor: pointer;
-  transition: 0.4s all;
-  height: 2.3rem !important;
-  width: fit-content;
-  margin: 0 auto;
-}
+  .icon_p {
+    cursor: pointer;
+    transition: 0.4s all;
+    height: 2.3rem !important;
+    width: fit-content;
+    margin: 0 auto;
+  }
 
-.sidebar {
-  position: fixed;
-  max-width: 10%;
-  min-width: 350px;
-  height: 100vh;
-  background: #1c2536;
-  border-top-right-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  padding: 1rem 0 1rem 0;
-  box-sizing: border-box;
+  .sidebar {
+    position: fixed;
+    max-width: 10%;
+    min-width: 350px;
+    height: 100vh;
+    background: #1c2536;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    padding: 1rem 0 1rem 0;
+    box-sizing: border-box;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 10000;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10000;
+  }
 
-.sidebar-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  column-gap: 1rem;
-  width: 100%;
+  .sidebar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1rem;
+    width: 100%;
 
-  border: solid 2px white;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  padding-bottom: 0.8rem;
-}
+    border: solid 2px white;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    padding-bottom: 0.8rem;
+  }
 
-.sidebar-cluster-data {
-  display: flex;
-  flex-direction: column;
-  row-gap: 1rem;
-  width: 85%;
-  height: 100%;
-  padding-top: 1.2rem;
-  padding-bottom: 1.2rem;
-}
+  .sidebar-cluster-data {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    width: 85%;
+    height: 100%;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+  }
 
-.title {
-  font-size: 28px;
-  font-weight: 700;
-  color: white;
-}
+  .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+  }
 
-.icon {
-  width: auto;
-  height: 3rem;
-}
+  .icon {
+    width: auto;
+    height: 3rem;
+  }
 
-.logo {
-  transform: scale(25%);
-}
+  .logo {
+    transform: scale(25%);
+  }
 </style>
